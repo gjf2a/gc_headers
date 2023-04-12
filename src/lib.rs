@@ -19,6 +19,10 @@ pub struct Pointer {
 }
 
 impl Pointer {
+    pub fn new(block: usize, size: usize) -> Self {
+        Self {block, offset: 0, size}
+    }
+
     pub fn len(&self) -> usize {
         self.size
     }
