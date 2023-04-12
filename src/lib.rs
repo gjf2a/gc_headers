@@ -27,6 +27,10 @@ impl Pointer {
         self.block
     }
 
+    pub fn offset(&self) -> usize {
+        self.offset
+    }
+
     pub fn next(&self) -> Option<Self> {
         let offset = self.offset + 1;
         if offset < self.size {
