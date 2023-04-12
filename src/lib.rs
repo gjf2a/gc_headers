@@ -1,9 +1,6 @@
 #![no_std]
 
 pub trait GarbageCollectingHeap {
-    const HEAP_SIZE: usize;
-    const MAX_BLOCKS: usize;
-    
     fn new() -> Self;
     fn load(&self, p: Pointer) -> HeapResult<u64>;
     fn store(&mut self, p: Pointer, value: u64) -> HeapResult<()>;
