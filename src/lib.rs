@@ -50,6 +50,7 @@ impl Pointer {
 }
 
 #[derive(Debug)]
+#[must_use]
 pub enum HeapResult<T> {
     Ok(T),
     Err(HeapError),
