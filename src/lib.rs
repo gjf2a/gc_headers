@@ -53,8 +53,12 @@ impl Pointer {
 
 #[derive(Clone, Copy, Eq, PartialEq, Debug, Error)]
 pub enum HeapError {
+    #[error("No more blocks in heap")]
     OutOfBlocks,
+    #[error("No blocks available of the requested size")]
     OutOfMemory,
+    #[error("Invalid block number")]
     IllegalBlock,
+    #[error("Invalid offset into block")]
     OffsetTooBig,
 }
