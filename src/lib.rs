@@ -62,3 +62,5 @@ pub enum HeapError {
     #[error("Invalid offset into block")]
     OffsetTooBig,
 }
+
+impl core::error::Error for HeapError {}
