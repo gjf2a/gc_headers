@@ -41,8 +41,12 @@ impl Pointer {
     pub fn offset(&self) -> usize {
         self.offset
     }
+}
 
-    pub fn next(&self) -> Option<Self> {
+impl Iterator for Pointer {
+    type Item = Pointer;
+
+    fn next(&mut self) -> Option<Self::Item> {
         let offset = self.offset + 1;
         if offset < self.size {
             Some(Self {
