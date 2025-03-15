@@ -1,4 +1,4 @@
-#![no_std]
+#![cfg_attr(not(test), no_std)]
 use thiserror_no_std::Error;
 
 pub trait GarbageCollectingHeap {
@@ -47,13 +47,10 @@ impl Iterator for Pointer {
     type Item = Pointer;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let offset = self.offset + 1;
-        if offset < self.size {
-            Some(Self {
-                block: self.block,
-                offset,
-                size: self.size,
-            })
+        if self.offset < self.size {
+            let result = Some(*self);
+            self.offset += 1;
+            result
         } else {
             None
         }
@@ -73,3 +70,18 @@ pub enum HeapError {
 }
 
 impl core::error::Error for HeapError {}
+
+#[cfg(test)]
+mod tests {
+    use crate::Pointer;
+
+    #[test]
+    fn test_pointer_iteration() {
+        let p = Pointer::new(0, 5);
+        let addresses = p.collect::<Vec<_>>();
+        assert_eq!(5, addresses.len());
+        for i in 0..5 {
+            assert_eq!(i, addresses[i].offset());
+        }
+    }
+}
