@@ -30,6 +30,10 @@ impl Pointer {
         Self {block, offset: 0, size}
     }
 
+    pub fn iter(&self) -> impl Iterator<Item=Pointer> {
+        PointerIter {next_ptr: *self}
+    }
+
     pub fn len(&self) -> usize {
         self.size
     }
@@ -43,13 +47,17 @@ impl Pointer {
     }
 }
 
-impl Iterator for Pointer {
+struct PointerIter {
+    next_ptr: Pointer
+}
+
+impl Iterator for PointerIter {
     type Item = Pointer;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if self.offset < self.size {
-            let result = Some(*self);
-            self.offset += 1;
+        if self.next_ptr.offset < self.next_ptr.size {
+            let result = Some(self.next_ptr);
+            self.next_ptr.offset += 1;
             result
         } else {
             None
@@ -78,7 +86,7 @@ mod tests {
     #[test]
     fn test_pointer_iteration() {
         let p = Pointer::new(0, 5);
-        let addresses = p.collect::<Vec<_>>();
+        let addresses = p.iter().collect::<Vec<_>>();
         assert_eq!(5, addresses.len());
         for i in 0..5 {
             assert_eq!(i, addresses[i].offset());
