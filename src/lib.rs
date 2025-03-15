@@ -7,7 +7,7 @@ pub trait GarbageCollectingHeap {
     fn store(&mut self, p: Pointer, value: u64) -> anyhow::Result<(), HeapError>;
     fn malloc<T: Tracer>(&mut self, num_words: usize, tracer: &T) -> anyhow::Result<Pointer, HeapError>;
     fn blocks_num_copies(&self) -> impl Iterator<Item = (usize, usize)>;
-    fn is_allocated(&self, block: usize) -> bool;
+    fn allocated_block_ptr(&self, block: usize) -> Option<Pointer>;
     fn num_allocated_blocks(&self) -> usize {
         self.blocks_num_copies().count()
     }
