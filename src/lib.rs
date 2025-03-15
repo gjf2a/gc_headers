@@ -2,9 +2,9 @@
 
 pub trait GarbageCollectingHeap {
     fn new() -> Self;
-    fn load(&self, p: Pointer) -> HeapResult<u64>;
-    fn store(&mut self, p: Pointer, value: u64) -> HeapResult<()>;
-    fn malloc<T: Tracer>(&mut self, num_words: usize, tracer: &T) -> HeapResult<Pointer>;
+    fn load(&self, p: Pointer) -> anyhow::Result<u64, HeapError>;
+    fn store(&mut self, p: Pointer, value: u64) -> anyhow::Result<(), HeapError>;
+    fn malloc<T: Tracer>(&mut self, num_words: usize, tracer: &T) -> anyhow::Result<Pointer, HeapError>;
 }
 
 pub trait Tracer {
@@ -49,33 +49,14 @@ impl Pointer {
     }
 }
 
-#[derive(Debug)]
-#[must_use]
-pub enum HeapResult<T> {
-    Ok(T),
-    Err(HeapError),
-}
-
-impl<T> HeapResult<T> {
-    pub fn unwrap(self) -> T {
-        match self {
-            HeapResult::Ok(value) => value,
-            HeapResult::Err(e) => panic!("Heap Error: {e:?}"),
-        }
-    }
-
-    pub fn map<U, F: FnOnce(T) -> U>(self, op: F) -> HeapResult<U> {
-        match self {
-            HeapResult::Ok(value) => HeapResult::Ok(op(value)),
-            HeapResult::Err(e) => HeapResult::Err(e),
-        }
-    }
-}
-
-#[derive(Clone, Copy, Eq, PartialEq, Debug)]
+#[derive(Debug, thiserror::Error)]
 pub enum HeapError {
+    #[error("Out of blocks")]
     OutOfBlocks,
+    #[error("Out of memory")]
     OutOfMemory,
-    IllegalBlock,
-    OffsetTooBig,
+    #[error("Illegal block: {0}")]
+    IllegalBlock(usize),
+    #[error("Offset too large: {0}")]
+    OffsetTooBig(usize),
 }
