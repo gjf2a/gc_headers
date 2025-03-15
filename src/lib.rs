@@ -61,10 +61,10 @@ pub enum HeapError {
     OutOfBlocks,
     #[error("No blocks available of the requested size")]
     OutOfMemory,
-    #[error("Invalid block number")]
-    IllegalBlock,
-    #[error("Invalid offset into block")]
-    OffsetTooBig,
+    #[error("Invalid block number: {0}")]
+    IllegalBlock(usize),
+    #[error("Invalid offset into block: {0}")]
+    OffsetTooBig(usize),
 }
 
 impl core::error::Error for HeapError {}
