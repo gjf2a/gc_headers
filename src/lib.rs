@@ -6,6 +6,8 @@ pub trait RamRegion {
     fn load(&self, p: Pointer) -> anyhow::Result<u64, HeapError>;
     fn store(&mut self, p: Pointer, value: u64) -> anyhow::Result<(), HeapError>;
     fn address(&self, p: Pointer) -> anyhow::Result<usize, HeapError>;
+    fn blocks_in_use(&self) -> impl Iterator<Item=usize>;
+    fn allocated_block_ptr(&self, block: usize) -> Option<Pointer>;
 }
 
 pub trait BasicRegion : RamRegion {
@@ -14,8 +16,6 @@ pub trait BasicRegion : RamRegion {
 
 pub trait GarbageCollectingHeap : RamRegion {
     fn blocks_num_copies(&self) -> impl Iterator<Item = (usize, usize)>;
-
-    fn allocated_block_ptr(&self, block: usize) -> Option<Pointer>;
 
     fn malloc<T: Tracer>(&mut self, num_words: usize, tracer: &T) -> anyhow::Result<Pointer, HeapError>;
 
