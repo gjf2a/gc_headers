@@ -6,22 +6,26 @@ pub trait RamRegion {
     fn load(&self, p: Pointer) -> anyhow::Result<u64, HeapError>;
     fn store(&mut self, p: Pointer, value: u64) -> anyhow::Result<(), HeapError>;
     fn address(&self, p: Pointer) -> anyhow::Result<usize, HeapError>;
-    fn blocks_in_use(&self) -> impl Iterator<Item=usize>;
+    fn blocks_in_use(&self) -> impl Iterator<Item = usize>;
     fn allocated_block_ptr(&self, block: usize) -> Option<Pointer>;
 }
 
-pub trait BasicRegion : RamRegion {
-    fn malloc(&mut self, num_words: usize, block_num: Option<usize>) -> anyhow::Result<Pointer, HeapError>;
+pub trait BasicRegion: RamRegion {
+    fn malloc(
+        &mut self,
+        num_words: usize,
+        block_num: Option<usize>,
+    ) -> anyhow::Result<Pointer, HeapError>;
 }
 
-pub trait GarbageCollectingHeap : RamRegion {
+pub trait GarbageCollectingHeap: RamRegion {
     fn blocks_num_copies(&self) -> impl Iterator<Item = (usize, usize)>;
-
-    fn malloc<T: Tracer>(&mut self, num_words: usize, tracer: &T) -> anyhow::Result<Pointer, HeapError>;
-
-    fn num_allocated_blocks(&self) -> usize {
-        self.blocks_num_copies().filter(|(_,n)| *n > 0).count()
-    }
+    fn malloc<T: Tracer>(
+        &mut self,
+        num_words: usize,
+        tracer: &T,
+    ) -> anyhow::Result<Pointer, HeapError>;
+    fn num_allocated_blocks(&self) -> usize;
 }
 
 pub trait Tracer {
@@ -37,11 +41,15 @@ pub struct Pointer {
 
 impl Pointer {
     pub fn new(block: usize, size: usize) -> Self {
-        Self {block, offset: 0, size}
+        Self {
+            block,
+            offset: 0,
+            size,
+        }
     }
 
-    pub fn iter(&self) -> impl Iterator<Item=Pointer> {
-        PointerIter {next_ptr: *self}
+    pub fn iter(&self) -> impl Iterator<Item = Pointer> {
+        PointerIter { next_ptr: *self }
     }
 
     pub fn len(&self) -> usize {
@@ -58,7 +66,7 @@ impl Pointer {
 }
 
 struct PointerIter {
-    next_ptr: Pointer
+    next_ptr: Pointer,
 }
 
 impl Iterator for PointerIter {
