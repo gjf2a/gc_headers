@@ -90,6 +90,8 @@ pub enum HeapError {
     OffsetTooBig(usize, usize, usize),
     #[error("Invalid heap address {0}; max address is {1}")]
     IllegalAddress(usize, usize),
+    #[error("Pointer size {0} misaligned with block size {1} for block {2}")]
+    MisalignedPointer(usize, usize, usize)
 }
 
 impl core::error::Error for HeapError {}
