@@ -11,7 +11,7 @@ pub trait RamRegion {
 }
 
 pub trait BasicRegion : RamRegion {
-    fn malloc<T: Tracer>(&mut self, num_words: usize, block_num: Option<usize>) -> anyhow::Result<Pointer, HeapError>;
+    fn malloc(&mut self, num_words: usize, block_num: Option<usize>) -> anyhow::Result<Pointer, HeapError>;
 }
 
 pub trait GarbageCollectingHeap : RamRegion {
