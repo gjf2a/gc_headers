@@ -20,7 +20,7 @@ pub trait GarbageCollectingHeap : RamRegion {
     fn malloc<T: Tracer>(&mut self, num_words: usize, tracer: &T) -> anyhow::Result<Pointer, HeapError>;
 
     fn num_allocated_blocks(&self) -> usize {
-        self.blocks_num_copies().count()
+        self.blocks_num_copies().filter(|(_,n)| *n > 0).count()
     }
 }
 
