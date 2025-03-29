@@ -88,7 +88,7 @@ pub enum HeapError {
     UnallocatedBlock(usize),
     #[error("Invalid offset ({0}) into block {1}; max offset is {2}")]
     OffsetTooBig(usize, usize, usize),
-    #[error("Invalid heap address {0}; max address is {1}")]
+    #[error("Invalid heap address {0}; address must be less than {1}")]
     IllegalAddress(usize, usize),
     #[error("Pointer size {0} misaligned with block size {1} for block {2}")]
     MisalignedPointer(usize, usize, usize)
