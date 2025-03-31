@@ -16,6 +16,7 @@ pub trait GarbageCollectingHeap {
     fn blocks_in_use(&self) -> impl Iterator<Item = usize>;
     fn allocated_block_ptr(&self, block: usize) -> Option<Pointer>;
     fn blocks_num_copies(&self) -> impl Iterator<Item = (usize, usize)>;
+    fn assert_no_strays(&self);
 
     fn num_allocated_blocks(&self) -> usize {
         self.blocks_in_use().count()
