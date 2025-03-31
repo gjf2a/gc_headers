@@ -82,6 +82,8 @@ pub enum HeapError {
     OutOfBlocks,
     #[error("No blocks available of the requested size")]
     OutOfMemory,
+    #[error("Cannot allocate a size-zero block")]
+    ZeroSizeRequest,
     #[error("Block number {0} out of range; max block number is {1}")]
     IllegalBlock(usize, usize),
     #[error("Block not allocated: {0}")]
