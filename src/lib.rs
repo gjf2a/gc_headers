@@ -1,18 +1,19 @@
 #![cfg_attr(not(test), no_std)]
 use thiserror_no_std::Error;
+use core::result::Result;
 
 pub trait GarbageCollectingHeap {
     fn new() -> Self;
-    fn load(&self, p: Pointer) -> anyhow::Result<u64, HeapError>;
-    fn store(&mut self, p: Pointer, value: u64) -> anyhow::Result<(), HeapError>;
+    fn load(&self, p: Pointer) -> Result<u64, HeapError>;
+    fn store(&mut self, p: Pointer, value: u64) -> Result<(), HeapError>;
     
     fn malloc<T: Tracer>(
         &mut self,
         num_words: usize,
         tracer: &T,
-    ) -> anyhow::Result<Pointer, HeapError>;
+    ) -> Result<Pointer, HeapError>;
 
-    fn address(&self, p: Pointer) -> anyhow::Result<usize, HeapError>;
+    fn address(&self, p: Pointer) -> Result<usize, HeapError>;
     fn blocks_in_use(&self) -> impl Iterator<Item = usize>;
     fn allocated_block_ptr(&self, block: usize) -> Option<Pointer>;
     fn blocks_num_copies(&self) -> impl Iterator<Item = (usize, usize)>;

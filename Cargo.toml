@@ -1,10 +1,9 @@
 [package]
 name = "gc_headers"
-version = "0.5.4"
+version = "0.6.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow = { version = "1.0", default-features = false }
 thiserror-no-std = "2.0.2"
