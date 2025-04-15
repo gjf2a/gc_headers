@@ -59,6 +59,10 @@ impl Pointer {
     pub fn offset(&self) -> usize {
         self.offset
     }
+
+    pub fn next(&self) -> Option<Self> {
+        self.iter().skip(1).next()
+    }
 }
 
 struct PointerIter {
